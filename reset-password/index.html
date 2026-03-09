@@ -5,63 +5,236 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Réinitialisation du mot de passe – Calendar SaaS</title>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #f5f5f5;
-      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
     .card {
       background: white;
-      padding: 40px;
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 440px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
     }
-    h1 { font-size: 1.4rem; margin-bottom: 12px; }
-    p { color: #666; line-height: 1.6; margin-bottom: 24px; }
-    .btn {
-      display: inline-block;
-      padding: 14px 28px;
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .logo-row h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+    }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    input[type="password"] {
+      width: 100%;
+      height: 50px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 1rem;
+      background: #fafafa;
+      color: #111;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+    input[type="password"]:focus { border-color: #007AFF; background: #fff; }
+    button {
+      width: 100%;
+      height: 50px;
       background: #007AFF;
       color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
       font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity 0.2s;
     }
-    .note { font-size: 0.85rem; color: #999; margin-top: 20px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+    }
+    .msg.error { background: #fff0f0; color: #d00; border: 1px solid #fcc; }
+    .msg.success { background: #f0fff4; color: #0a0; border: 1px solid #9e9; }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-state {
+      text-align: center;
+      color: #666;
+      padding: 20px 0;
+    }
+    #loading-state .spinner {
+      display: inline-block;
+      border-color: rgba(0,122,255,0.3);
+      border-top-color: #007AFF;
+      margin-bottom: 12px;
+    }
+    #form-state, #success-state { display: none; }
   </style>
-  <script>
-    // Try to redirect to the app using the deep link.
-    // If the app is installed, iOS/Android will open it directly.
-    window.addEventListener("DOMContentLoaded", function () {
-      var params = window.location.search;
-      var appUrl = "calendar-saas://reset-password" + params;
-      // Attempt to open app; fall back gracefully after a short delay.
-      var fallback = setTimeout(function () {
-        document.getElementById("fallback").style.display = "block";
-      }, 1500);
-      window.location = appUrl;
-    });
-  </script>
 </head>
 <body>
   <div class="card">
-    <h1>Réinitialisation du mot de passe</h1>
-    <p>Ouverture de l'application Calendar SaaS…</p>
-    <div id="fallback" style="display:none">
-      <p>L'application ne s'est pas ouverte automatiquement. Assurez-vous qu'elle est installée sur votre appareil, puis appuyez sur le bouton ci-dessous.</p>
-      <script>
-        document.write('<a class="btn" href="calendar-saas://reset-password' + window.location.search + '">Ouvrir l\'application</a>');
-      </script>
-      <p class="note">Si l'application n'est pas installée, téléchargez-la sur l'App Store ou le Play Store.</p>
+    <div class="logo-row">
+      <h1>Calendar SaaS</h1>
+    </div>
+
+    <!-- État : chargement / vérification du code -->
+    <div id="loading-state">
+      <div class="spinner"></div>
+      <p>Vérification du lien…</p>
+    </div>
+
+    <!-- État : formulaire -->
+    <div id="form-state">
+      <h2>Nouveau mot de passe</h2>
+      <p class="subtitle">Choisissez un nouveau mot de passe pour votre compte.</p>
+
+      <label for="password">Nouveau mot de passe</label>
+      <input type="password" id="password" placeholder="Au moins 6 caractères" autocomplete="new-password" />
+
+      <label for="confirm">Confirmer le mot de passe</label>
+      <input type="password" id="confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
+
+      <button id="submit-btn" onclick="handleSubmit()">
+        <span id="btn-label">Mettre à jour</span>
+        <div id="btn-spinner" class="spinner"></div>
+      </button>
+
+      <div id="msg" class="msg"></div>
+    </div>
+
+    <!-- État : succès -->
+    <div id="success-state">
+      <h2>Mot de passe mis à jour ✓</h2>
+      <p class="subtitle" style="margin-top:12px">
+        Votre mot de passe a été changé avec succès.<br/>
+        Vous pouvez fermer cette page et vous connecter dans l'application.
+      </p>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://yootmbdddmtiqjybguqi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3RtYmRkZG10aXFqeWJndXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTk3NjksImV4cCI6MjA4MDA5NTc2OX0.JlEA7K1HqnURH0NQtqS6X3M5mR5UVAcuuDr--NmGv7Y';
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function show(id) {
+      ['loading-state', 'form-state', 'success-state'].forEach(s => {
+        document.getElementById(s).style.display = s === id ? 'block' : 'none';
+      });
+    }
+
+    function showMsg(text, type) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = 'msg ' + type;
+      el.style.display = 'block';
+    }
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+
+      if (!code) {
+        show('form-state');
+        showMsg("Lien invalide ou expiré. Veuillez demander un nouveau lien de réinitialisation.", 'error');
+        document.getElementById('submit-btn').disabled = true;
+        return;
+      }
+
+      // Échanger le code PKCE contre une session
+      const { error } = await client.auth.exchangeCodeForSession(code);
+
+      if (error) {
+        show('form-state');
+        showMsg("Ce lien est invalide ou a expiré. Veuillez demander un nouveau lien.", 'error');
+        document.getElementById('submit-btn').disabled = true;
+        return;
+      }
+
+      show('form-state');
+    }
+
+    async function handleSubmit() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+
+      if (password.length < 6) {
+        showMsg("Le mot de passe doit contenir au moins 6 caractères.", 'error');
+        return;
+      }
+      if (password !== confirm) {
+        showMsg("Les mots de passe ne correspondent pas.", 'error');
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      document.getElementById('btn-label').style.display = 'none';
+      document.getElementById('btn-spinner').style.display = 'block';
+
+      const { error } = await client.auth.updateUser({ password });
+
+      if (error) {
+        btn.disabled = false;
+        document.getElementById('btn-label').style.display = 'block';
+        document.getElementById('btn-spinner').style.display = 'none';
+        showMsg(error.message, 'error');
+        return;
+      }
+
+      show('success-state');
+    }
+
+    init();
+  </script>
 </body>
 </html>
