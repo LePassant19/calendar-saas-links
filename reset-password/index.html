@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réinitialisation du mot de passe – Calendar SaaS</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 440px;
+    }
+    h1 { font-size: 1.4rem; margin-bottom: 12px; }
+    p { color: #666; line-height: 1.6; margin-bottom: 24px; }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: #007AFF;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .note { font-size: 0.85rem; color: #999; margin-top: 20px; }
+  </style>
+  <script>
+    // Try to redirect to the app using the deep link.
+    // If the app is installed, iOS/Android will open it directly.
+    window.addEventListener("DOMContentLoaded", function () {
+      var params = window.location.search;
+      var appUrl = "calendar-saas://reset-password" + params;
+      // Attempt to open app; fall back gracefully after a short delay.
+      var fallback = setTimeout(function () {
+        document.getElementById("fallback").style.display = "block";
+      }, 1500);
+      window.location = appUrl;
+    });
+  </script>
+</head>
+<body>
+  <div class="card">
+    <h1>Réinitialisation du mot de passe</h1>
+    <p>Ouverture de l'application Calendar SaaS…</p>
+    <div id="fallback" style="display:none">
+      <p>L'application ne s'est pas ouverte automatiquement. Assurez-vous qu'elle est installée sur votre appareil, puis appuyez sur le bouton ci-dessous.</p>
+      <script>
+        document.write('<a class="btn" href="calendar-saas://reset-password' + window.location.search + '">Ouvrir l\'application</a>');
+      </script>
+      <p class="note">Si l'application n'est pas installée, téléchargez-la sur l'App Store ou le Play Store.</p>
+    </div>
+  </div>
+</body>
+</html>

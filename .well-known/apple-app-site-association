@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["J9G93M9232.com.lepassant.calendar-saas"],
+        "components": [
+          {
+            "/": "/reset-password*",
+            "comment": "Password reset deep link"
+          }
+        ]
+      }
+    ]
+  }
+}
