@@ -22,7 +22,7 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.1);
       padding: 32px 28px;
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
     }
     .logo-row {
       display: flex;
@@ -30,14 +30,12 @@
       gap: 10px;
       margin-bottom: 24px;
     }
-    .logo-row h1 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #333;
-    }
+    .logo-row h1 { font-size: 1.2rem; font-weight: 700; color: #333; }
+
     .invite-badge {
-      display: inline-flex;
+      display: none;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       background: #EBF5FF;
       border: 1px solid #007AFF;
@@ -47,9 +45,8 @@
       font-size: 0.85rem;
       font-weight: 600;
       color: #007AFF;
-      width: 100%;
-      justify-content: center;
     }
+
     h2 {
       font-size: 1.4rem;
       font-weight: 700;
@@ -57,31 +54,81 @@
       text-align: center;
       margin-bottom: 20px;
     }
-    .field { margin-bottom: 16px; }
+
+    /* Section separator */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #999;
+    }
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #eee;
+    }
+
+    .field { margin-bottom: 14px; }
     label {
       display: block;
       font-size: 0.85rem;
       font-weight: 600;
       color: #444;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
+    }
+    label .optional {
+      font-weight: 400;
+      color: #aaa;
+      font-size: 0.8rem;
+      margin-left: 4px;
     }
     input[type="text"],
     input[type="email"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="color"] {
       width: 100%;
-      height: 50px;
+      height: 48px;
       border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 0 16px;
-      font-size: 1rem;
+      padding: 0 14px;
+      font-size: 0.97rem;
       background: #fafafa;
       color: #111;
       outline: none;
       transition: border-color 0.2s;
     }
+    input[type="color"] {
+      padding: 4px 8px;
+      cursor: pointer;
+    }
     input:focus { border-color: #007AFF; background: #fff; }
     .row { display: flex; gap: 12px; }
     .row .field { flex: 1; }
+
+    .color-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .color-field input[type="color"] {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      padding: 4px;
+      border-radius: 8px;
+    }
+    .color-field input[type="text"] {
+      flex: 1;
+      font-family: monospace;
+    }
+
     button {
       width: 100%;
       height: 50px;
@@ -100,8 +147,9 @@
       gap: 10px;
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+
     .msg {
-      margin-top: 16px;
+      margin-top: 14px;
       padding: 12px 16px;
       border-radius: 8px;
       font-size: 0.9rem;
@@ -111,6 +159,7 @@
     }
     .msg.error   { background: #fff0f0; color: #d00; border: 1px solid #fcc; }
     .msg.success { background: #f0fff4; color: #080; border: 1px solid #9e9; }
+
     .spinner {
       width: 20px; height: 20px;
       border: 2px solid rgba(255,255,255,0.4);
@@ -119,6 +168,7 @@
       animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
     #loading-state {
       text-align: center;
       color: #666;
@@ -130,12 +180,10 @@
       border-top-color: #007AFF;
       margin-bottom: 12px;
     }
+
     #form-state, #success-state, #error-state { display: none; }
-    .success-icon {
-      font-size: 3rem;
-      text-align: center;
-      margin-bottom: 16px;
-    }
+
+    .success-icon { font-size: 3rem; text-align: center; margin-bottom: 16px; }
     .subtitle {
       color: #555;
       font-size: 0.92rem;
@@ -143,6 +191,8 @@
       line-height: 1.6;
       margin-top: 8px;
     }
+
+    #company-section { display: none; }
   </style>
 </head>
 <body>
@@ -154,7 +204,7 @@
     <!-- Loading -->
     <div id="loading-state">
       <div class="spinner"></div>
-      <p>Vérification de l'invitation…</p>
+      <p style="margin-top:12px;color:#666">Vérification de l'invitation…</p>
     </div>
 
     <!-- Invalid token -->
@@ -165,8 +215,12 @@
 
     <!-- Signup form -->
     <div id="form-state">
-      <div id="invite-badge" class="invite-badge" style="display:none"></div>
+      <div id="invite-badge" class="invite-badge"></div>
       <h2>Créer mon compte</h2>
+
+      <!-- ── Compte personnel ── -->
+      <div class="section-label">Compte personnel</div>
+
       <div class="row">
         <div class="field">
           <label for="firstName">Prénom *</label>
@@ -179,7 +233,7 @@
       </div>
       <div class="field">
         <label for="email">Email *</label>
-        <input type="email" id="email" placeholder="jean@exemple.com" autocomplete="email" />
+        <input type="email" id="email" placeholder="jean@entreprise.com" autocomplete="email" />
       </div>
       <div class="field">
         <label for="password">Mot de passe *</label>
@@ -189,6 +243,32 @@
         <label for="confirm">Confirmer le mot de passe *</label>
         <input type="password" id="confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
       </div>
+
+      <!-- ── Entreprise (only for role=company) ── -->
+      <div id="company-section">
+        <div class="section-label">Votre entreprise</div>
+
+        <div class="field">
+          <label for="companyName">Nom de l'entreprise *</label>
+          <input type="text" id="companyName" placeholder="Acme Sport" />
+        </div>
+        <div class="field">
+          <label for="companyAddress">Adresse <span class="optional">(optionnel)</span></label>
+          <input type="text" id="companyAddress" placeholder="12 rue de la Paix, 75001 Paris" />
+        </div>
+        <div class="field">
+          <label for="contactEmail">Email de contact <span class="optional">(optionnel)</span></label>
+          <input type="email" id="contactEmail" placeholder="contact@entreprise.com" />
+        </div>
+        <div class="field">
+          <label for="brandColorText">Couleur de marque <span class="optional">(optionnel)</span></label>
+          <div class="color-field">
+            <input type="color" id="brandColorPicker" value="#007AFF" oninput="syncColor('picker')" />
+            <input type="text"  id="brandColorText"   value="#007AFF" placeholder="#007AFF" maxlength="7" oninput="syncColor('text')" />
+          </div>
+        </div>
+      </div>
+
       <button id="submit-btn" onclick="handleSubmit()">
         <span id="btn-label">Créer mon compte</span>
         <div id="btn-spinner" class="spinner" style="display:none"></div>
@@ -209,14 +289,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const SUPABASE_URL     = 'https://yootmbdddmtiqjybguqi.supabase.co';
+    const SUPABASE_URL      = 'https://yootmbdddmtiqjybguqi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3RtYmRkZG10aXFqeWJndXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTk3NjksImV4cCI6MjA4MDA5NTc2OX0.JlEA7K1HqnURH0NQtqS6X3M5mR5UVAcuuDr--NmGv7Y';
 
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const params    = new URLSearchParams(window.location.search);
+    const client      = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const params      = new URLSearchParams(window.location.search);
     const inviteToken = params.get('token');
     const inviteRole  = params.get('role');
+    const isCompany   = inviteRole === 'company';
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
 
     function show(id) {
       ['loading-state', 'form-state', 'success-state', 'error-state'].forEach(s => {
@@ -226,9 +308,32 @@
 
     function showMsg(text, type) {
       const el = document.getElementById('msg');
-      el.textContent = text;
-      el.className   = 'msg ' + type;
+      el.textContent   = text;
+      el.className     = 'msg ' + type;
       el.style.display = 'block';
+    }
+
+    function hideMsg() {
+      document.getElementById('msg').style.display = 'none';
+    }
+
+    function setLoading(on) {
+      document.getElementById('submit-btn').disabled              = on;
+      document.getElementById('btn-label').style.display          = on ? 'none'  : 'inline';
+      document.getElementById('btn-spinner').style.display        = on ? 'block' : 'none';
+    }
+
+    function isValidHex(v) { return /^#[0-9A-Fa-f]{6}$/.test(v); }
+
+    function syncColor(source) {
+      const picker = document.getElementById('brandColorPicker');
+      const text   = document.getElementById('brandColorText');
+      if (source === 'picker') {
+        text.value = picker.value.toUpperCase();
+      } else {
+        const v = text.value.trim();
+        if (isValidHex(v)) picker.value = v;
+      }
     }
 
     function getRoleLabel(role) {
@@ -237,42 +342,58 @@
       return null;
     }
 
-    function setLoading(loading) {
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = loading;
-      document.getElementById('btn-label').style.display  = loading ? 'none'  : 'inline';
-      document.getElementById('btn-spinner').style.display = loading ? 'block' : 'none';
-    }
+    // ── Init ─────────────────────────────────────────────────────────────────
 
-    async function init() {
-      if (!inviteToken) {
-        show('error-state');
-        return;
-      }
+    function init() {
+      if (!inviteToken) { show('error-state'); return; }
 
-      // Show role badge if present
       const roleLabel = getRoleLabel(inviteRole);
       if (roleLabel) {
         const badge = document.getElementById('invite-badge');
-        badge.textContent = '🎟 Invitation · ' + roleLabel;
-        badge.style.display = 'flex';
+        badge.textContent    = '🎟 Invitation · ' + roleLabel;
+        badge.style.display  = 'flex';
+      }
+
+      if (isCompany) {
+        document.getElementById('company-section').style.display = 'block';
       }
 
       show('form-state');
     }
 
+    // ── Submit ────────────────────────────────────────────────────────────────
+
     async function handleSubmit() {
+      hideMsg();
+
       const firstName = document.getElementById('firstName').value.trim();
       const lastName  = document.getElementById('lastName').value.trim();
       const email     = document.getElementById('email').value.trim();
       const password  = document.getElementById('password').value;
       const confirm   = document.getElementById('confirm').value;
 
-      if (!firstName) { showMsg('Veuillez entrer votre prénom.', 'error'); return; }
-      if (!lastName)  { showMsg('Veuillez entrer votre nom.', 'error'); return; }
-      if (!email)     { showMsg('Veuillez entrer votre adresse email.', 'error'); return; }
+      // Personal fields validation
+      if (!firstName)          { showMsg('Veuillez entrer votre prénom.', 'error'); return; }
+      if (!lastName)           { showMsg('Veuillez entrer votre nom.', 'error'); return; }
+      if (!email)              { showMsg('Veuillez entrer votre adresse email.', 'error'); return; }
       if (password.length < 6) { showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error'); return; }
       if (password !== confirm) { showMsg('Les mots de passe ne correspondent pas.', 'error'); return; }
+
+      // Company fields
+      let companyName    = '';
+      let companyAddress = '';
+      let contactEmail   = '';
+      let brandColor     = '#007AFF';
+
+      if (isCompany) {
+        companyName    = document.getElementById('companyName').value.trim();
+        companyAddress = document.getElementById('companyAddress').value.trim();
+        contactEmail   = document.getElementById('contactEmail').value.trim();
+        brandColor     = document.getElementById('brandColorText').value.trim() || '#007AFF';
+
+        if (!companyName) { showMsg('Veuillez entrer le nom de l\'entreprise.', 'error'); return; }
+        if (brandColor && !isValidHex(brandColor)) { showMsg('La couleur de marque doit être un code hexadécimal valide (ex: #007AFF).', 'error'); return; }
+      }
 
       setLoading(true);
 
@@ -284,18 +405,19 @@
         showMsg(authError.message, 'error');
         return;
       }
-
       if (!authData.user) {
         setLoading(false);
         showMsg('Erreur lors de la création du compte.', 'error');
         return;
       }
 
-      // 2. Create personality record
+      const userId = authData.user.id;
+
+      // 2. Create personalities record (first + last name)
       const { error: personalityError } = await client
         .from('personalities')
         .upsert({
-          id:         authData.user.id,
+          id:         userId,
           first_name: firstName,
           last_name:  lastName,
           created_at: new Date().toISOString(),
@@ -304,18 +426,37 @@
 
       if (personalityError) {
         setLoading(false);
-        showMsg('Compte créé mais erreur lors de l\'enregistrement du profil : ' + personalityError.message, 'error');
+        showMsg('Erreur lors de l\'enregistrement du profil : ' + personalityError.message, 'error');
         return;
       }
 
-      // 3. Redeem invitation token to assign the role
+      // 3. Redeem invitation token → sets profiles.role, trigger creates companies row
       if (inviteToken) {
-        const { error: redeemError } = await client.rpc('redeem_invitation_token', {
+        const { data: redeemData, error: redeemError } = await client.rpc('redeem_invitation_token', {
           p_token: inviteToken,
         });
         if (redeemError) {
           console.warn('Token redemption error:', redeemError.message);
-          // Non-blocking: account is created, role may not be assigned
+        }
+      }
+
+      // 4. If company: update the companies record created by the trigger
+      if (isCompany && companyName) {
+        const companyUpdate = {
+          name:          companyName,
+          contact_email: contactEmail || null,
+          address:       companyAddress || null,
+          brand_color:   brandColor,
+        };
+
+        const { error: companyError } = await client
+          .from('companies')
+          .update(companyUpdate)
+          .eq('id', userId);
+
+        if (companyError) {
+          console.warn('Company update error:', companyError.message);
+          // Non-blocking — account + role are set, company data can be edited later in the app
         }
       }
 
