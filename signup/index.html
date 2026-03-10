@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscription – CoachPlanning</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .logo-row h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+    }
+    .invite-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #EBF5FF;
+      border: 1px solid #007AFF;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #007AFF;
+      width: 100%;
+      justify-content: center;
+    }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .field { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      height: 50px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 1rem;
+      background: #fafafa;
+      color: #111;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #007AFF; background: #fff; }
+    .row { display: flex; gap: 12px; }
+    .row .field { flex: 1; }
+    button {
+      width: 100%;
+      height: 50px;
+      background: #007AFF;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+      line-height: 1.5;
+    }
+    .msg.error   { background: #fff0f0; color: #d00; border: 1px solid #fcc; }
+    .msg.success { background: #f0fff4; color: #080; border: 1px solid #9e9; }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-state {
+      text-align: center;
+      color: #666;
+      padding: 20px 0;
+    }
+    #loading-state .spinner {
+      display: inline-block;
+      border-color: rgba(0,122,255,0.3);
+      border-top-color: #007AFF;
+      margin-bottom: 12px;
+    }
+    #form-state, #success-state, #error-state { display: none; }
+    .success-icon {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .subtitle {
+      color: #555;
+      font-size: 0.92rem;
+      text-align: center;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <h1>CoachPlanning</h1>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading-state">
+      <div class="spinner"></div>
+      <p>Vérification de l'invitation…</p>
+    </div>
+
+    <!-- Invalid token -->
+    <div id="error-state">
+      <h2>Lien invalide</h2>
+      <p class="subtitle">Ce lien d'invitation est invalide ou a expiré.<br/>Contactez l'administrateur pour obtenir un nouveau lien.</p>
+    </div>
+
+    <!-- Signup form -->
+    <div id="form-state">
+      <div id="invite-badge" class="invite-badge" style="display:none"></div>
+      <h2>Créer mon compte</h2>
+      <div class="row">
+        <div class="field">
+          <label for="firstName">Prénom *</label>
+          <input type="text" id="firstName" placeholder="Jean" autocomplete="given-name" />
+        </div>
+        <div class="field">
+          <label for="lastName">Nom *</label>
+          <input type="text" id="lastName" placeholder="Dupont" autocomplete="family-name" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" placeholder="jean@exemple.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="password">Mot de passe *</label>
+        <input type="password" id="password" placeholder="Au moins 6 caractères" autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label for="confirm">Confirmer le mot de passe *</label>
+        <input type="password" id="confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
+      </div>
+      <button id="submit-btn" onclick="handleSubmit()">
+        <span id="btn-label">Créer mon compte</span>
+        <div id="btn-spinner" class="spinner" style="display:none"></div>
+      </button>
+      <div id="msg" class="msg"></div>
+    </div>
+
+    <!-- Success -->
+    <div id="success-state">
+      <div class="success-icon">✅</div>
+      <h2>Compte créé !</h2>
+      <p class="subtitle">
+        Vérifiez votre boîte mail pour confirmer votre adresse email.<br/><br/>
+        Vous pourrez ensuite vous connecter dans l'application CoachPlanning.
+      </p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL     = 'https://yootmbdddmtiqjybguqi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3RtYmRkZG10aXFqeWJndXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTk3NjksImV4cCI6MjA4MDA5NTc2OX0.JlEA7K1HqnURH0NQtqS6X3M5mR5UVAcuuDr--NmGv7Y';
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const params    = new URLSearchParams(window.location.search);
+    const inviteToken = params.get('token');
+    const inviteRole  = params.get('role');
+
+    function show(id) {
+      ['loading-state', 'form-state', 'success-state', 'error-state'].forEach(s => {
+        document.getElementById(s).style.display = s === id ? 'block' : 'none';
+      });
+    }
+
+    function showMsg(text, type) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className   = 'msg ' + type;
+      el.style.display = 'block';
+    }
+
+    function getRoleLabel(role) {
+      if (role === 'company') return 'Entreprise';
+      if (role === 'coach')   return 'Coach';
+      return null;
+    }
+
+    function setLoading(loading) {
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = loading;
+      document.getElementById('btn-label').style.display  = loading ? 'none'  : 'inline';
+      document.getElementById('btn-spinner').style.display = loading ? 'block' : 'none';
+    }
+
+    async function init() {
+      if (!inviteToken) {
+        show('error-state');
+        return;
+      }
+
+      // Show role badge if present
+      const roleLabel = getRoleLabel(inviteRole);
+      if (roleLabel) {
+        const badge = document.getElementById('invite-badge');
+        badge.textContent = '🎟 Invitation · ' + roleLabel;
+        badge.style.display = 'flex';
+      }
+
+      show('form-state');
+    }
+
+    async function handleSubmit() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const password  = document.getElementById('password').value;
+      const confirm   = document.getElementById('confirm').value;
+
+      if (!firstName) { showMsg('Veuillez entrer votre prénom.', 'error'); return; }
+      if (!lastName)  { showMsg('Veuillez entrer votre nom.', 'error'); return; }
+      if (!email)     { showMsg('Veuillez entrer votre adresse email.', 'error'); return; }
+      if (password.length < 6) { showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error'); return; }
+      if (password !== confirm) { showMsg('Les mots de passe ne correspondent pas.', 'error'); return; }
+
+      setLoading(true);
+
+      // 1. Create auth user
+      const { data: authData, error: authError } = await client.auth.signUp({ email, password });
+
+      if (authError) {
+        setLoading(false);
+        showMsg(authError.message, 'error');
+        return;
+      }
+
+      if (!authData.user) {
+        setLoading(false);
+        showMsg('Erreur lors de la création du compte.', 'error');
+        return;
+      }
+
+      // 2. Create personality record
+      const { error: personalityError } = await client
+        .from('personalities')
+        .upsert({
+          id:         authData.user.id,
+          first_name: firstName,
+          last_name:  lastName,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+
+      if (personalityError) {
+        setLoading(false);
+        showMsg('Compte créé mais erreur lors de l\'enregistrement du profil : ' + personalityError.message, 'error');
+        return;
+      }
+
+      // 3. Redeem invitation token to assign the role
+      if (inviteToken) {
+        const { error: redeemError } = await client.rpc('redeem_invitation_token', {
+          p_token: inviteToken,
+        });
+        if (redeemError) {
+          console.warn('Token redemption error:', redeemError.message);
+          // Non-blocking: account is created, role may not be assigned
+        }
+      }
+
+      setLoading(false);
+      show('success-state');
+    }
+
+    init();
+  </script>
+</body>
+</html>
