@@ -257,8 +257,8 @@
           <input type="text" id="c-address" placeholder="12 rue de la Paix, 75001 Paris" />
         </div>
         <div class="field">
-          <label for="c-contact-email">Email de contact <span class="opt">(optionnel)</span></label>
-          <input type="email" id="c-contact-email" placeholder="contact@entreprise.com" />
+          <label for="c-email">Email *</label>
+          <input type="email" id="c-email" placeholder="contact@entreprise.com" autocomplete="email" />
         </div>
         <div class="field">
           <label>Couleur de marque <span class="opt">(optionnel)</span></label>
@@ -268,12 +268,7 @@
           </div>
         </div>
 
-        <div class="section-sep">Accès administrateur</div>
-
-        <div class="field">
-          <label for="c-email">Email de connexion *</label>
-          <input type="email" id="c-email" placeholder="admin@entreprise.com" autocomplete="email" />
-        </div>
+        <div class="section-sep">Mot de passe</div>
         <div class="field">
           <label for="c-password">Mot de passe *</label>
           <input type="password" id="c-password" placeholder="Au moins 6 caractères" autocomplete="new-password" />
@@ -430,11 +425,10 @@
     // ── Company signup ────────────────────────────────────────────────────
 
     async function submitCompany() {
-      const name         = document.getElementById('c-name').value.trim();
-      const address      = document.getElementById('c-address').value.trim();
-      const contactEmail = document.getElementById('c-contact-email').value.trim();
-      const brandColor   = document.getElementById('c-color-text').value.trim() || '#007AFF';
-      const email        = document.getElementById('c-email').value.trim();
+      const name       = document.getElementById('c-name').value.trim();
+      const address    = document.getElementById('c-address').value.trim();
+      const email      = document.getElementById('c-email').value.trim();
+      const brandColor = document.getElementById('c-color-text').value.trim() || '#007AFF';
       const password     = document.getElementById('c-password').value;
       const confirm      = document.getElementById('c-confirm').value;
 
@@ -462,8 +456,8 @@
         .from('companies')
         .update({
           name,
-          address:       address      || null,
-          contact_email: contactEmail || null,
+          address:       address || null,
+          contact_email: email,
           brand_color:   brandColor,
         })
         .eq('id', authData.user.id);
