@@ -32,48 +32,71 @@
     }
     .logo-row h1 { font-size: 1.2rem; font-weight: 700; color: #333; }
 
-    .invite-badge {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: #EBF5FF;
-      border: 1px solid #007AFF;
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin-bottom: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #007AFF;
-    }
-
-    h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #333;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    /* Section separator */
-    .section-label {
+    /* ── Account type badge ───────────────────────────────────────────────── */
+    .type-badge {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: 20px 0 16px;
-      font-size: 0.8rem;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 22px;
+    }
+    .type-badge.personal {
+      background: #F0F7FF;
+      border: 1px solid #B3D4FF;
+    }
+    .type-badge.company {
+      background: #FFF8EC;
+      border: 1px solid #FFD580;
+    }
+    .type-badge .icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .type-badge .text { flex: 1; }
+    .type-badge .label {
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       color: #999;
+      margin-bottom: 2px;
     }
-    .section-label::before,
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #eee;
+    .type-badge.personal .label { color: #4A90D9; }
+    .type-badge.company  .label { color: #C07B00; }
+    .type-badge .title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #222;
     }
+    .type-badge .desc {
+      font-size: 0.82rem;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 18px;
+    }
+
+    /* ── Section separator ───────────────────────────────────────────────── */
+    .section-sep {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #bbb;
+    }
+    .section-sep::before,
+    .section-sep::after { content: ''; flex: 1; height: 1px; background: #eee; }
 
     .field { margin-bottom: 14px; }
     label {
@@ -83,16 +106,11 @@
       color: #444;
       margin-bottom: 5px;
     }
-    label .optional {
-      font-weight: 400;
-      color: #aaa;
-      font-size: 0.8rem;
-      margin-left: 4px;
-    }
+    label .opt { font-weight: 400; color: #bbb; font-size: 0.8rem; margin-left: 3px; }
+
     input[type="text"],
     input[type="email"],
-    input[type="password"],
-    input[type="color"] {
+    input[type="password"] {
       width: 100%;
       height: 48px;
       border: 1px solid #ddd;
@@ -104,32 +122,21 @@
       outline: none;
       transition: border-color 0.2s;
     }
-    input[type="color"] {
-      padding: 4px 8px;
-      cursor: pointer;
-    }
     input:focus { border-color: #007AFF; background: #fff; }
+
     .row { display: flex; gap: 12px; }
-    .row .field { flex: 1; }
+    .row .field { flex: 1; min-width: 0; }
 
-    .color-field {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .color-wrap { display: flex; align-items: center; gap: 10px; }
+    .color-wrap input[type="color"] {
+      width: 48px; height: 48px;
+      border: 1px solid #ddd; border-radius: 8px;
+      padding: 4px; background: #fafafa;
+      cursor: pointer; flex-shrink: 0;
     }
-    .color-field input[type="color"] {
-      width: 48px;
-      height: 48px;
-      flex-shrink: 0;
-      padding: 4px;
-      border-radius: 8px;
-    }
-    .color-field input[type="text"] {
-      flex: 1;
-      font-family: monospace;
-    }
+    .color-wrap input[type="text"] { flex: 1; font-family: monospace; }
 
-    button {
+    button.primary {
       width: 100%;
       height: 50px;
       background: #007AFF;
@@ -139,14 +146,14 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 10px;
       transition: opacity 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
     }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .msg {
       margin-top: 14px;
@@ -169,11 +176,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    #loading-state {
-      text-align: center;
-      color: #666;
-      padding: 20px 0;
-    }
+    #loading-state { text-align: center; color: #666; padding: 20px 0; }
     #loading-state .spinner {
       display: inline-block;
       border-color: rgba(0,122,255,0.3);
@@ -185,102 +188,114 @@
 
     .success-icon { font-size: 3rem; text-align: center; margin-bottom: 16px; }
     .subtitle {
-      color: #555;
-      font-size: 0.92rem;
-      text-align: center;
-      line-height: 1.6;
-      margin-top: 8px;
+      color: #555; font-size: 0.92rem;
+      text-align: center; line-height: 1.6; margin-top: 8px;
     }
-
-    #company-section { display: none; }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="logo-row">
-      <h1>CoachPlanning</h1>
-    </div>
+    <div class="logo-row"><h1>CoachPlanning</h1></div>
 
-    <!-- Loading -->
+    <!-- ── Loading ──────────────────────────────────────────────────────── -->
     <div id="loading-state">
       <div class="spinner"></div>
-      <p style="margin-top:12px;color:#666">Vérification de l'invitation…</p>
+      <p style="margin-top:12px">Vérification de l'invitation…</p>
     </div>
 
-    <!-- Invalid token -->
+    <!-- ── Invalid token ─────────────────────────────────────────────────── -->
     <div id="error-state">
-      <h2>Lien invalide</h2>
+      <h2 style="text-align:center">Lien invalide</h2>
       <p class="subtitle">Ce lien d'invitation est invalide ou a expiré.<br/>Contactez l'administrateur pour obtenir un nouveau lien.</p>
     </div>
 
-    <!-- Signup form -->
+    <!-- ── Form ──────────────────────────────────────────────────────────── -->
     <div id="form-state">
-      <div id="invite-badge" class="invite-badge"></div>
-      <h2>Créer mon compte</h2>
 
-      <!-- ── Compte personnel ── -->
-      <div class="section-label">Compte personnel</div>
+      <!-- Type badge injected by JS -->
+      <div id="type-badge"></div>
 
-      <div class="row">
-        <div class="field">
-          <label for="firstName">Prénom *</label>
-          <input type="text" id="firstName" placeholder="Jean" autocomplete="given-name" />
-        </div>
-        <div class="field">
-          <label for="lastName">Nom *</label>
-          <input type="text" id="lastName" placeholder="Dupont" autocomplete="family-name" />
-        </div>
-      </div>
-      <div class="field">
-        <label for="email">Email *</label>
-        <input type="email" id="email" placeholder="jean@entreprise.com" autocomplete="email" />
-      </div>
-      <div class="field">
-        <label for="password">Mot de passe *</label>
-        <input type="password" id="password" placeholder="Au moins 6 caractères" autocomplete="new-password" />
-      </div>
-      <div class="field">
-        <label for="confirm">Confirmer le mot de passe *</label>
-        <input type="password" id="confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
-      </div>
-
-      <!-- ── Entreprise (only for role=company) ── -->
-      <div id="company-section">
-        <div class="section-label">Votre entreprise</div>
-
-        <div class="field">
-          <label for="companyName">Nom de l'entreprise *</label>
-          <input type="text" id="companyName" placeholder="Acme Sport" />
-        </div>
-        <div class="field">
-          <label for="companyAddress">Adresse <span class="optional">(optionnel)</span></label>
-          <input type="text" id="companyAddress" placeholder="12 rue de la Paix, 75001 Paris" />
-        </div>
-        <div class="field">
-          <label for="contactEmail">Email de contact <span class="optional">(optionnel)</span></label>
-          <input type="email" id="contactEmail" placeholder="contact@entreprise.com" />
-        </div>
-        <div class="field">
-          <label for="brandColorText">Couleur de marque <span class="optional">(optionnel)</span></label>
-          <div class="color-field">
-            <input type="color" id="brandColorPicker" value="#007AFF" oninput="syncColor('picker')" />
-            <input type="text"  id="brandColorText"   value="#007AFF" placeholder="#007AFF" maxlength="7" oninput="syncColor('text')" />
+      <!-- ════ PERSONAL form (coach / client) ════ -->
+      <div id="personal-form" style="display:none">
+        <h2>Créer mon compte</h2>
+        <div class="row">
+          <div class="field">
+            <label for="p-firstName">Prénom *</label>
+            <input type="text" id="p-firstName" placeholder="Jean" autocomplete="given-name" />
+          </div>
+          <div class="field">
+            <label for="p-lastName">Nom *</label>
+            <input type="text" id="p-lastName" placeholder="Dupont" autocomplete="family-name" />
           </div>
         </div>
+        <div class="field">
+          <label for="p-email">Email *</label>
+          <input type="email" id="p-email" placeholder="jean@exemple.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="p-password">Mot de passe *</label>
+          <input type="password" id="p-password" placeholder="Au moins 6 caractères" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label for="p-confirm">Confirmer *</label>
+          <input type="password" id="p-confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
+        </div>
       </div>
 
-      <button id="submit-btn" onclick="handleSubmit()">
-        <span id="btn-label">Créer mon compte</span>
+      <!-- ════ COMPANY form ════ -->
+      <div id="company-form" style="display:none">
+        <h2>Créer le compte entreprise</h2>
+
+        <div class="section-sep">L'entreprise</div>
+
+        <div class="field">
+          <label for="c-name">Nom de l'entreprise *</label>
+          <input type="text" id="c-name" placeholder="Acme Sport" />
+        </div>
+        <div class="field">
+          <label for="c-address">Adresse <span class="opt">(optionnel)</span></label>
+          <input type="text" id="c-address" placeholder="12 rue de la Paix, 75001 Paris" />
+        </div>
+        <div class="field">
+          <label for="c-contact-email">Email de contact <span class="opt">(optionnel)</span></label>
+          <input type="email" id="c-contact-email" placeholder="contact@entreprise.com" />
+        </div>
+        <div class="field">
+          <label>Couleur de marque <span class="opt">(optionnel)</span></label>
+          <div class="color-wrap">
+            <input type="color"  id="c-color-picker" value="#007AFF" oninput="syncColor('picker')" />
+            <input type="text"   id="c-color-text"   value="#007AFF" placeholder="#007AFF" maxlength="7" oninput="syncColor('text')" />
+          </div>
+        </div>
+
+        <div class="section-sep">Accès administrateur</div>
+
+        <div class="field">
+          <label for="c-email">Email de connexion *</label>
+          <input type="email" id="c-email" placeholder="admin@entreprise.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="c-password">Mot de passe *</label>
+          <input type="password" id="c-password" placeholder="Au moins 6 caractères" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label for="c-confirm">Confirmer *</label>
+          <input type="password" id="c-confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
+        </div>
+      </div>
+
+      <button class="primary" id="submit-btn" onclick="handleSubmit()">
+        <span id="btn-label">Créer le compte</span>
         <div id="btn-spinner" class="spinner" style="display:none"></div>
       </button>
       <div id="msg" class="msg"></div>
     </div>
 
-    <!-- Success -->
+    <!-- ── Success ───────────────────────────────────────────────────────── -->
     <div id="success-state">
       <div class="success-icon">✅</div>
-      <h2>Compte créé !</h2>
-      <p class="subtitle">
+      <h2 style="text-align:center" id="success-title">Compte créé !</h2>
+      <p class="subtitle" id="success-body">
         Vérifiez votre boîte mail pour confirmer votre adresse email.<br/><br/>
         Vous pourrez ensuite vous connecter dans l'application CoachPlanning.
       </p>
@@ -298,169 +313,168 @@
     const inviteRole  = params.get('role');
     const isCompany   = inviteRole === 'company';
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // ── UI helpers ────────────────────────────────────────────────────────
 
     function show(id) {
       ['loading-state', 'form-state', 'success-state', 'error-state'].forEach(s => {
-        document.getElementById(s).style.display = s === id ? 'block' : 'none';
+        document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
       });
     }
 
     function showMsg(text, type) {
       const el = document.getElementById('msg');
-      el.textContent   = text;
-      el.className     = 'msg ' + type;
+      el.textContent = text;
+      el.className   = 'msg ' + type;
       el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function hideMsg() {
-      document.getElementById('msg').style.display = 'none';
-    }
+    function hideMsg() { document.getElementById('msg').style.display = 'none'; }
 
     function setLoading(on) {
-      document.getElementById('submit-btn').disabled              = on;
-      document.getElementById('btn-label').style.display          = on ? 'none'  : 'inline';
-      document.getElementById('btn-spinner').style.display        = on ? 'block' : 'none';
+      document.getElementById('submit-btn').disabled         = on;
+      document.getElementById('btn-label').style.display    = on ? 'none'  : 'inline';
+      document.getElementById('btn-spinner').style.display  = on ? 'block' : 'none';
     }
 
     function isValidHex(v) { return /^#[0-9A-Fa-f]{6}$/.test(v); }
 
     function syncColor(source) {
-      const picker = document.getElementById('brandColorPicker');
-      const text   = document.getElementById('brandColorText');
+      const picker = document.getElementById('c-color-picker');
+      const text   = document.getElementById('c-color-text');
       if (source === 'picker') {
         text.value = picker.value.toUpperCase();
       } else {
-        const v = text.value.trim();
-        if (isValidHex(v)) picker.value = v;
+        if (isValidHex(text.value.trim())) picker.value = text.value.trim();
       }
     }
 
-    function getRoleLabel(role) {
-      if (role === 'company') return 'Entreprise';
-      if (role === 'coach')   return 'Coach';
-      return null;
-    }
-
-    // ── Init ─────────────────────────────────────────────────────────────────
+    // ── Init ─────────────────────────────────────────────────────────────
 
     function init() {
       if (!inviteToken) { show('error-state'); return; }
 
-      const roleLabel = getRoleLabel(inviteRole);
-      if (roleLabel) {
-        const badge = document.getElementById('invite-badge');
-        badge.textContent    = '🎟 Invitation · ' + roleLabel;
-        badge.style.display  = 'flex';
-      }
-
       if (isCompany) {
-        document.getElementById('company-section').style.display = 'block';
+        // Company badge
+        document.getElementById('type-badge').innerHTML = `
+          <div class="type-badge company">
+            <div class="icon">🏢</div>
+            <div class="text">
+              <div class="label">Invitation</div>
+              <div class="title">Compte Entreprise</div>
+              <div class="desc">Compte générique lié à votre organisation</div>
+            </div>
+          </div>`;
+        document.getElementById('company-form').style.display = 'block';
+      } else {
+        // Personal badge
+        const roleLabel = inviteRole === 'coach' ? 'Coach' : 'Personnel';
+        document.getElementById('type-badge').innerHTML = `
+          <div class="type-badge personal">
+            <div class="icon">${inviteRole === 'coach' ? '🏅' : '👤'}</div>
+            <div class="text">
+              <div class="label">Invitation</div>
+              <div class="title">Compte ${roleLabel}</div>
+              <div class="desc">Compte associé à votre identité personnelle</div>
+            </div>
+          </div>`;
+        document.getElementById('personal-form').style.display = 'block';
       }
 
       show('form-state');
     }
 
-    // ── Submit ────────────────────────────────────────────────────────────────
+    // ── Submit ────────────────────────────────────────────────────────────
 
     async function handleSubmit() {
       hideMsg();
+      isCompany ? await submitCompany() : await submitPersonal();
+    }
 
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName  = document.getElementById('lastName').value.trim();
-      const email     = document.getElementById('email').value.trim();
-      const password  = document.getElementById('password').value;
-      const confirm   = document.getElementById('confirm').value;
+    // ── Personal signup ───────────────────────────────────────────────────
 
-      // Personal fields validation
-      if (!firstName)          { showMsg('Veuillez entrer votre prénom.', 'error'); return; }
-      if (!lastName)           { showMsg('Veuillez entrer votre nom.', 'error'); return; }
-      if (!email)              { showMsg('Veuillez entrer votre adresse email.', 'error'); return; }
-      if (password.length < 6) { showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error'); return; }
-      if (password !== confirm) { showMsg('Les mots de passe ne correspondent pas.', 'error'); return; }
+    async function submitPersonal() {
+      const firstName = document.getElementById('p-firstName').value.trim();
+      const lastName  = document.getElementById('p-lastName').value.trim();
+      const email     = document.getElementById('p-email').value.trim();
+      const password  = document.getElementById('p-password').value;
+      const confirm   = document.getElementById('p-confirm').value;
 
-      // Company fields
-      let companyName    = '';
-      let companyAddress = '';
-      let contactEmail   = '';
-      let brandColor     = '#007AFF';
-
-      if (isCompany) {
-        companyName    = document.getElementById('companyName').value.trim();
-        companyAddress = document.getElementById('companyAddress').value.trim();
-        contactEmail   = document.getElementById('contactEmail').value.trim();
-        brandColor     = document.getElementById('brandColorText').value.trim() || '#007AFF';
-
-        if (!companyName) { showMsg('Veuillez entrer le nom de l\'entreprise.', 'error'); return; }
-        if (brandColor && !isValidHex(brandColor)) { showMsg('La couleur de marque doit être un code hexadécimal valide (ex: #007AFF).', 'error'); return; }
-      }
+      if (!firstName)           { showMsg('Veuillez entrer votre prénom.', 'error'); return; }
+      if (!lastName)            { showMsg('Veuillez entrer votre nom.', 'error'); return; }
+      if (!email)               { showMsg('Veuillez entrer votre adresse email.', 'error'); return; }
+      if (password.length < 6)  { showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error'); return; }
+      if (password !== confirm)  { showMsg('Les mots de passe ne correspondent pas.', 'error'); return; }
 
       setLoading(true);
 
-      // 1. Create auth user
       const { data: authData, error: authError } = await client.auth.signUp({ email, password });
+      if (authError)     { setLoading(false); showMsg(authError.message, 'error'); return; }
+      if (!authData.user){ setLoading(false); showMsg('Erreur lors de la création du compte.', 'error'); return; }
 
-      if (authError) {
-        setLoading(false);
-        showMsg(authError.message, 'error');
-        return;
-      }
-      if (!authData.user) {
-        setLoading(false);
-        showMsg('Erreur lors de la création du compte.', 'error');
-        return;
-      }
+      const { error: persoError } = await client.from('personalities').upsert({
+        id: authData.user.id, first_name: firstName, last_name: lastName,
+        created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      });
+      if (persoError) { setLoading(false); showMsg('Erreur profil : ' + persoError.message, 'error'); return; }
 
-      const userId = authData.user.id;
-
-      // 2. Create personalities record (first + last name)
-      const { error: personalityError } = await client
-        .from('personalities')
-        .upsert({
-          id:         userId,
-          first_name: firstName,
-          last_name:  lastName,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        });
-
-      if (personalityError) {
-        setLoading(false);
-        showMsg('Erreur lors de l\'enregistrement du profil : ' + personalityError.message, 'error');
-        return;
-      }
-
-      // 3. Redeem invitation token → sets profiles.role, trigger creates companies row
       if (inviteToken) {
-        const { data: redeemData, error: redeemError } = await client.rpc('redeem_invitation_token', {
-          p_token: inviteToken,
-        });
-        if (redeemError) {
-          console.warn('Token redemption error:', redeemError.message);
-        }
-      }
-
-      // 4. If company: update the companies record created by the trigger
-      if (isCompany && companyName) {
-        const companyUpdate = {
-          name:          companyName,
-          contact_email: contactEmail || null,
-          address:       companyAddress || null,
-          brand_color:   brandColor,
-        };
-
-        const { error: companyError } = await client
-          .from('companies')
-          .update(companyUpdate)
-          .eq('id', userId);
-
-        if (companyError) {
-          console.warn('Company update error:', companyError.message);
-          // Non-blocking — account + role are set, company data can be edited later in the app
-        }
+        const { error: redeemErr } = await client.rpc('redeem_invitation_token', { p_token: inviteToken });
+        if (redeemErr) console.warn('Redeem error:', redeemErr.message);
       }
 
       setLoading(false);
+      show('success-state');
+    }
+
+    // ── Company signup ────────────────────────────────────────────────────
+
+    async function submitCompany() {
+      const name         = document.getElementById('c-name').value.trim();
+      const address      = document.getElementById('c-address').value.trim();
+      const contactEmail = document.getElementById('c-contact-email').value.trim();
+      const brandColor   = document.getElementById('c-color-text').value.trim() || '#007AFF';
+      const email        = document.getElementById('c-email').value.trim();
+      const password     = document.getElementById('c-password').value;
+      const confirm      = document.getElementById('c-confirm').value;
+
+      if (!name)                { showMsg('Veuillez entrer le nom de l\'entreprise.', 'error'); return; }
+      if (!email)               { showMsg('Veuillez entrer l\'email de connexion.', 'error'); return; }
+      if (password.length < 6)  { showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error'); return; }
+      if (password !== confirm)  { showMsg('Les mots de passe ne correspondent pas.', 'error'); return; }
+      if (brandColor && !isValidHex(brandColor)) { showMsg('Code couleur invalide (ex: #007AFF).', 'error'); return; }
+
+      setLoading(true);
+
+      // 1. Create auth account
+      const { data: authData, error: authError } = await client.auth.signUp({ email, password });
+      if (authError)     { setLoading(false); showMsg(authError.message, 'error'); return; }
+      if (!authData.user){ setLoading(false); showMsg('Erreur lors de la création du compte.', 'error'); return; }
+
+      // 2. Redeem token → sets profiles.role = 'company', trigger creates companies row
+      if (inviteToken) {
+        const { error: redeemErr } = await client.rpc('redeem_invitation_token', { p_token: inviteToken });
+        if (redeemErr) console.warn('Redeem error:', redeemErr.message);
+      }
+
+      // 3. Update companies row created by trigger
+      const { error: companyErr } = await client
+        .from('companies')
+        .update({
+          name,
+          address:       address      || null,
+          contact_email: contactEmail || null,
+          brand_color:   brandColor,
+        })
+        .eq('id', authData.user.id);
+      if (companyErr) console.warn('Company update error:', companyErr.message);
+
+      setLoading(false);
+
+      document.getElementById('success-title').textContent = name + ' est prêt !';
+      document.getElementById('success-body').innerHTML =
+        'Vérifiez la boîte mail <strong>' + email + '</strong> pour confirmer l\'adresse.<br/><br/>' +
+        'Vous pourrez ensuite vous connecter dans l\'application CoachPlanning.';
       show('success-state');
     }
 
