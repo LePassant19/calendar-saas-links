@@ -298,11 +298,13 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
   <script>
-    const SUPABASE_URL      = 'https://yootmbdddmtiqjybguqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3RtYmRkZG10aXFqeWJndXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTk3NjksImV4cCI6MjA4MDA5NTc2OX0.JlEA7K1HqnURH0NQtqS6X3M5mR5UVAcuuDr--NmGv7Y';
-
-    const client      = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const cfg = window.__SUPABASE_CONFIG__;
+    if (!cfg?.url || !cfg?.anonKey) {
+      document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
+    } else {
+    const client      = supabase.createClient(cfg.url, cfg.anonKey);
     const params      = new URLSearchParams(window.location.search);
     const inviteToken = params.get('token');
     const inviteRole  = params.get('role');
@@ -473,6 +475,7 @@
     }
 
     init();
+    }
   </script>
 </body>
 </html>

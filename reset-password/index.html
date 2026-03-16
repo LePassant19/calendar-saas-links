@@ -141,7 +141,7 @@
       <label for="confirm">Confirmer le mot de passe</label>
       <input type="password" id="confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" />
 
-      <button id="submit-btn" onclick="handleSubmit()">
+      <button id="submit-btn" type="button">
         <span id="btn-label">Mettre à jour</span>
         <div id="btn-spinner" class="spinner"></div>
       </button>
@@ -156,17 +156,21 @@
         Votre mot de passe a été changé avec succès.<br/>
         Vous pouvez fermer cette page et vous connecter dans l'application.
       </p>
+      <!-- href="/login" assumes same-origin deploy: universal-links-site served at app origin (e.g. app.lepassant.app) -->
+      <a href="/login" style="display:inline-block;margin-top:16px;color:#007AFF;font-weight:600;text-decoration:none;">Se connecter</a>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
   <script>
-    const SUPABASE_URL = 'https://yootmbdddmtiqjybguqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3RtYmRkZG10aXFqeWJndXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTk3NjksImV4cCI6MjA4MDA5NTc2OX0.JlEA7K1HqnURH0NQtqS6X3M5mR5UVAcuuDr--NmGv7Y';
+    const cfg = window.__SUPABASE_CONFIG__;
+    if (!cfg?.url || !cfg?.anonKey) {
+      document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
+    } else {
+      const client = supabase.createClient(cfg.url, cfg.anonKey);
 
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    function show(id) {
+      function show(id) {
       ['loading-state', 'form-state', 'success-state'].forEach(s => {
         document.getElementById(s).style.display = s === id ? 'block' : 'none';
       });
@@ -180,6 +184,20 @@
     }
 
     async function init() {
+      // --- Error params: Supabase redirects here with ?error=... when link is invalid/expired ---
+      const searchParams = new URLSearchParams(window.location.search);
+      const errorCode = searchParams.get('error_code');
+      const errorDesc = searchParams.get('error_description');
+      if (searchParams.get('error') || errorCode) {
+        show('form-state');
+        const msg = errorCode === 'otp_expired'
+          ? "Ce lien de réinitialisation a expiré. Veuillez demander un nouveau lien."
+          : (errorDesc ? decodeURIComponent(errorDesc.replace(/\+/g, ' ')) : "Lien invalide ou expiré. Veuillez demander un nouveau lien.");
+        showMsg(msg, 'error');
+        document.getElementById('submit-btn').disabled = true;
+        return;
+      }
+
       // --- Implicit flow: tokens arrive in the URL hash ---
       // e.g. #access_token=xxx&type=recovery&refresh_token=yyy
       const hash = new URLSearchParams(window.location.hash.substring(1));
@@ -255,7 +273,9 @@
       show('success-state');
     }
 
-    init();
+      document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+      init();
+    }
   </script>
 </body>
 </html>
