@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
   <title>Confirmer la réinitialisation – Calendar SaaS</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -101,7 +102,6 @@
     </div>
   </div>
 
-  <script src="config.js"></script>
   <script>
     (function() {
       const params = new URLSearchParams(window.location.search);
@@ -121,11 +121,8 @@
         try {
           const parsed = new URL(url);
           if (parsed.protocol !== 'https:') return false;
-          const cfg = window.__SUPABASE_CONFIG__;
-          if (!cfg?.url) return false;
-          const supabaseOrigin = new URL(cfg.url).origin;
-          if (parsed.origin !== supabaseOrigin) return false;
-          if (!parsed.pathname.endsWith('/verify')) return false;
+          if (!parsed.hostname.endsWith('.supabase.co')) return false;
+          if (parsed.pathname !== '/auth/v1/verify') return false;
           return true;
         } catch {
           return false;
