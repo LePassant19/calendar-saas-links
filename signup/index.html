@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inscription – CoachPlanning</title>
+  <title>Inscription – YM Mobility</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -195,7 +195,7 @@
 </head>
 <body>
   <div class="card">
-    <div class="logo-row"><h1>CoachPlanning</h1></div>
+    <div class="logo-row"><h1 id="app-name-header">YM Mobility</h1></div>
 
     <!-- ── Loading ──────────────────────────────────────────────────────── -->
     <div id="loading-state">
@@ -292,7 +292,7 @@
       <h2 style="text-align:center" id="success-title">Compte créé !</h2>
       <p class="subtitle" id="success-body">
         Vérifiez votre boîte mail pour confirmer votre adresse email.<br/><br/>
-        Vous pourrez ensuite vous connecter dans l'application CoachPlanning.
+        Vous pourrez ensuite vous connecter dans l'application <span id="success-app-name">YM Mobility</span>.
       </p>
     </div>
   </div>
@@ -301,6 +301,12 @@
   <script src="config.js"></script>
   <script>
     const cfg = window.__SUPABASE_CONFIG__;
+    const appName = cfg?.appName || 'YM Mobility';
+    document.title = 'Inscription – ' + appName;
+    var h1 = document.getElementById('app-name-header');
+    if (h1) h1.textContent = appName;
+    var successAppName = document.getElementById('success-app-name');
+    if (successAppName) successAppName.textContent = appName;
     if (!cfg?.url || !cfg?.anonKey) {
       document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
     } else {
@@ -470,7 +476,7 @@
       document.getElementById('success-title').textContent = name + ' est prêt !';
       document.getElementById('success-body').innerHTML =
         'Vérifiez la boîte mail <strong>' + email + '</strong> pour confirmer l\'adresse.<br/><br/>' +
-        'Vous pourrez ensuite vous connecter dans l\'application CoachPlanning.';
+        'Vous pourrez ensuite vous connecter dans l\'application ' + appName + '.';
       show('success-state');
     }
 

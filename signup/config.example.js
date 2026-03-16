@@ -6,4 +6,5 @@
 window.__SUPABASE_CONFIG__ = {
   url: "https://your-project.supabase.co",
   anonKey: "your-anon-key",
+  appName: "YM Mobility",
 };
