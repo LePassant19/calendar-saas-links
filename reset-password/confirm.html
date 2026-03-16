@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Confirmer la réinitialisation – Calendar SaaS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .logo-row h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+    }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    button {
+      width: 100%;
+      height: 50px;
+      background: #007AFF;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .msg.error { background: #fff0f0; color: #d00; border: 1px solid #fcc; }
+    .msg.info { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <h1>Calendar SaaS</h1>
+    </div>
+
+    <div id="ready-state">
+      <h2>Réinitialisation du mot de passe</h2>
+      <p class="subtitle">
+        Cliquez sur le bouton ci-dessous pour continuer vers la page de réinitialisation.
+      </p>
+      <button id="continue-btn" type="button">Continuer</button>
+    </div>
+
+    <div id="error-state" style="display: none;">
+      <h2>Lien invalide</h2>
+      <p class="subtitle">
+        Ce lien de réinitialisation est invalide ou a expiré.
+      </p>
+      <div class="msg error">
+        Veuillez demander un nouveau lien depuis la page de connexion.
+      </div>
+      <a href="/login" style="display:block;margin-top:16px;text-align:center;color:#007AFF;font-weight:600;text-decoration:none;">Retour à la connexion</a>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect_url') || params.get('confirmation_url') || params.get('url');
+
+      const readyEl = document.getElementById('ready-state');
+      const errorEl = document.getElementById('error-state');
+      const btn = document.getElementById('continue-btn');
+
+      function showError() {
+        readyEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+
+      function isValidRedirectUrl(url) {
+        if (!url || typeof url !== 'string') return false;
+        try {
+          const parsed = new URL(url);
+          if (parsed.protocol !== 'https:') return false;
+          const cfg = window.__SUPABASE_CONFIG__;
+          if (!cfg?.url) return false;
+          const supabaseOrigin = new URL(cfg.url).origin;
+          if (parsed.origin !== supabaseOrigin) return false;
+          if (!parsed.pathname.endsWith('/verify')) return false;
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      if (!redirectUrl || !isValidRedirectUrl(redirectUrl)) {
+        showError();
+        return;
+      }
+
+      btn.addEventListener('click', function() {
+        window.location.href = redirectUrl;
+      });
+    })();
+  </script>
+</body>
+</html>
