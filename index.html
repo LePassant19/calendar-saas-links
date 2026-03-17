@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon.png" type="image/png" />
-  <title>Calendar SaaS</title>
+  <title></title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -30,8 +30,17 @@
 </head>
 <body>
   <div class="card">
-    <h1>Calendar SaaS</h1>
+    <h1 id="app-name"></h1>
     <p>Please open this link on your mobile device with the app installed.</p>
   </div>
+  <script src="/app-config.js"></script>
+  <script>
+    (function() {
+      var appName = (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
+      document.title = appName;
+      var el = document.getElementById('app-name');
+      if (el) el.textContent = appName;
+    })();
+  </script>
 </body>
 </html>

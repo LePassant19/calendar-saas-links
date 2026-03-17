@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon.png" type="image/png" />
-  <title>Support – YM Mobility / Le Passant</title>
+  <title>Support</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -41,12 +41,12 @@
 <body>
   <div class="container">
     <h1>Support</h1>
-    <p class="subtitle">YM Mobility / Le Passant</p>
+    <p class="subtitle" id="app-subtitle"></p>
 
     <p>Bienvenue sur la page d'assistance. Nous sommes là pour vous aider.</p>
 
     <h2>Questions et assistance</h2>
-    <p>Pour toute question, problème technique ou demande d'aide concernant l'application YM Mobility (Le Passant), contactez-nous :</p>
+    <p>Pour toute question, problème technique ou demande d'aide concernant l'application <span id="app-name-intro"></span>, contactez-nous :</p>
     <div class="contact-box">
       <p><strong>Email :</strong> <a href="mailto:contact@lepassant.app">contact@lepassant.app</a></p>
       <p style="margin-top: 8px;">Nous nous efforçons de répondre sous 48 heures ouvrées.</p>
@@ -55,7 +55,7 @@
     <h2>Suppression de compte</h2>
     <p>Vous pouvez supprimer votre compte directement depuis l'application :</p>
     <ul>
-      <li>Ouvrez l'application YM Mobility</li>
+      <li>Ouvrez l'application <span id="app-name-list"></span></li>
       <li>Allez dans l'onglet <strong>Profil</strong></li>
       <li>Faites défiler jusqu'à « Supprimer mon compte »</li>
       <li>Confirmez la suppression</li>
@@ -65,5 +65,19 @@
     <h2>Politique de confidentialité</h2>
     <p>Consultez notre <a href="/privacy/">politique de confidentialité</a> pour plus d'informations sur la collecte et l'utilisation de vos données.</p>
   </div>
+  <script src="/app-config.js"></script>
+  <script>
+    (function() {
+      var appName = (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
+      var displayName = appName + ' / Le Passant';
+      document.title = 'Support – ' + displayName;
+      var subtitle = document.getElementById('app-subtitle');
+      if (subtitle) subtitle.textContent = displayName;
+      var intro = document.getElementById('app-name-intro');
+      if (intro) intro.textContent = appName + ' (Le Passant)';
+      var list = document.getElementById('app-name-list');
+      if (list) list.textContent = appName;
+    })();
+  </script>
 </body>
 </html>

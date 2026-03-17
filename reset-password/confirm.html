@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/favicon.png" type="image/png" />
-  <title>Confirmer la réinitialisation – Calendar SaaS</title>
+  <title>Confirmer la réinitialisation</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -98,7 +98,7 @@
 <body>
   <div class="card">
     <div class="logo-row">
-      <h1>Calendar SaaS</h1>
+      <h1 id="app-name"></h1>
     </div>
 
     <div id="ready-state">
@@ -121,9 +121,15 @@
     </div>
   </div>
 
+  <script src="/app-config.js"></script>
   <script>
     (function() {
-      const params = new URLSearchParams(window.location.search);
+      var appName = (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
+      document.title = 'Confirmer la réinitialisation – ' + appName;
+      var el = document.getElementById('app-name');
+      if (el) el.textContent = appName;
+
+      var params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect_url') || params.get('confirmation_url') || params.get('url');
 
       const readyEl = document.getElementById('ready-state');

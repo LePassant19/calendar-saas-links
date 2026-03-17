@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon.png" type="image/png" />
-  <title>Réinitialisation du mot de passe – Calendar SaaS</title>
+  <title>Réinitialisation du mot de passe</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -122,7 +122,7 @@
 <body>
   <div class="card">
     <div class="logo-row">
-      <h1 id="app-name">Calendar SaaS</h1>
+      <h1 id="app-name"></h1>
     </div>
 
     <!-- État : chargement / vérification du code -->
@@ -162,24 +162,27 @@
     </div>
   </div>
 
-  <!-- Error params handled first — no config.js needed when link is invalid/expired -->
+  <!-- Error params handled first — app-config.js needed for app name in error state -->
+  <script src="/app-config.js"></script>
   <script>
     (function() {
-      const searchParams = new URLSearchParams(window.location.search);
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-      const errorCode = searchParams.get('error_code') || hashParams.get('error_code');
-      const errorDesc = searchParams.get('error_description') || hashParams.get('error_description');
+      var appName = (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
+      var searchParams = new URLSearchParams(window.location.search);
+      var hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+      var errorCode = searchParams.get('error_code') || hashParams.get('error_code');
+      var errorDesc = searchParams.get('error_description') || hashParams.get('error_description');
       if (searchParams.get('error') || hashParams.get('error') || errorCode) {
-        const msg = errorCode === 'otp_expired'
+        var msg = errorCode === 'otp_expired'
           ? "Ce lien de réinitialisation a expiré. Veuillez demander un nouveau lien."
           : (errorDesc ? decodeURIComponent(String(errorDesc).replace(/\+/g, ' ')) : "Lien invalide ou expiré. Veuillez demander un nouveau lien.");
-        document.body.innerHTML = '<div class="card"><div class="logo-row"><h1>Calendar SaaS</h1></div><h2>Lien invalide</h2><p class="subtitle">' + msg + '</p><a href="/login" style="display:inline-block;margin-top:16px;color:#007AFF;font-weight:600;text-decoration:none;">Retour à la connexion</a></div>';
+        document.body.innerHTML = '<div class="card"><div class="logo-row"><h1>' + appName + '</h1></div><h2>Lien invalide</h2><p class="subtitle">' + msg + '</p><a href="/login" style="display:inline-block;margin-top:16px;color:#007AFF;font-weight:600;text-decoration:none;">Retour à la connexion</a></div>';
         window.__RESET_PASSWORD_ERROR_SHOWN = true;
         return;
       }
     })();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/app-config.js"></script>
   <script src="config.js"></script>
   <script>
     if (window.__RESET_PASSWORD_ERROR_SHOWN) { /* already shown by early script */ } else {
@@ -187,7 +190,7 @@
     if (!cfg?.url || !cfg?.anonKey) {
       document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
     } else {
-      const appName = cfg.appName || 'Calendar SaaS';
+      const appName = cfg.appName || (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
       document.title = 'Réinitialisation du mot de passe – ' + appName;
       const h1 = document.getElementById('app-name');
       if (h1) h1.textContent = appName;
