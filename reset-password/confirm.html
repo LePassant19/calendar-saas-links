@@ -160,7 +160,15 @@
       }
 
       btn.addEventListener('click', function() {
-        window.location.href = redirectUrl;
+        // Override redirect_to with current origin so the flow works from any device/browser,
+        // even if the native app sent localhost:8081 as redirect_to.
+        try {
+          var url = new URL(redirectUrl);
+          url.searchParams.set('redirect_to', window.location.origin + '/reset-password');
+          window.location.href = url.toString();
+        } catch {
+          window.location.href = redirectUrl;
+        }
       });
     })();
   </script>
