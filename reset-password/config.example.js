@@ -1,9 +1,10 @@
 /**
  * Supabase config for reset-password page.
- * Copy to config.js and set values from your environment (SUPABASE_URL, SUPABASE_ANON_KEY).
- * config.js is gitignored — never commit real keys.
+ * Preferred: npm run build:reset-password-config (reads EXPO_PUBLIC_* or SUPABASE_* from .env / CI).
+ * Fallback: copy to config.js and set values manually. config.js is gitignored — never commit real keys.
  */
 window.__SUPABASE_CONFIG__ = {
   url: "https://your-project.supabase.co",
   anonKey: "your-anon-key",
+  appName: "Your App Name",
 };

@@ -1,4 +1,23 @@
 <!DOCTYPE html>
+<!--
+  confirm.html — Email scanner protection intermediary.
+
+  PURPOSE: Prevent email security scanners (Outlook Safe Links, Gmail, etc.) from
+  pre-fetching the Supabase verify URL and consuming the one-time token before the
+  user clicks it. This page shows a manual "Continue" button; the token is only
+  consumed on real user interaction.
+
+  TO ACTIVATE: Configure a custom Supabase email template (Auth → Email Templates →
+  Reset Password) so the link points HERE first:
+    {{ .SiteURL }}/reset-password/confirm?confirmation_url={{ .ConfirmationURL }}
+  When the user clicks "Continue", this page redirects to the Supabase verify URL,
+  which then redirects to /reset-password (index.html) with the hash tokens.
+
+  CURRENT STATUS: This page is NOT in the active flow. The app currently calls
+  resetPasswordForEmail with redirectTo: /reset-password (index.html), which means
+  Supabase emails the verify link directly. Re-wire by updating the Supabase email
+  template as described above.
+-->
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />

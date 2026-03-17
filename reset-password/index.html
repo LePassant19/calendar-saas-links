@@ -122,7 +122,7 @@
 <body>
   <div class="card">
     <div class="logo-row">
-      <h1>Calendar SaaS</h1>
+      <h1 id="app-name">Calendar SaaS</h1>
     </div>
 
     <!-- État : chargement / vérification du code -->
@@ -187,7 +187,16 @@
     if (!cfg?.url || !cfg?.anonKey) {
       document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
     } else {
-      const client = supabase.createClient(cfg.url, cfg.anonKey);
+      const appName = cfg.appName || 'Calendar SaaS';
+      document.title = 'Réinitialisation du mot de passe – ' + appName;
+      const h1 = document.getElementById('app-name');
+      if (h1) h1.textContent = appName;
+
+      // flowType: 'implicit' matches getResetPasswordClient() on the app side.
+      // Tokens arrive in the URL hash (#access_token=...&type=recovery) — no code_verifier needed.
+      const client = supabase.createClient(cfg.url, cfg.anonKey, {
+        auth: { flowType: 'implicit' },
+      });
 
       function show(id) {
       ['loading-state', 'form-state', 'success-state'].forEach(s => {
@@ -226,23 +235,7 @@
         return;
       }
 
-      // --- PKCE flow: code arrives as ?code= query param ---
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
-
-      if (code) {
-        const { error } = await client.auth.exchangeCodeForSession(code);
-        if (error) {
-          show('form-state');
-          showMsg("Ce lien est invalide ou a expiré. Veuillez demander un nouveau lien.", 'error');
-          document.getElementById('submit-btn').disabled = true;
-          return;
-        }
-        show('form-state');
-        return;
-      }
-
-      // No token or code found
+      // No token found
       show('form-state');
       showMsg("Lien invalide ou expiré. Veuillez demander un nouveau lien de réinitialisation.", 'error');
       document.getElementById('submit-btn').disabled = true;
@@ -252,6 +245,7 @@
       const password = document.getElementById('password').value;
       const confirm = document.getElementById('confirm').value;
 
+      // Keep in sync with Supabase Auth → Password → Minimum password length (currently 6).
       if (password.length < 6) {
         showMsg("Le mot de passe doit contenir au moins 6 caractères.", 'error');
         return;
