@@ -264,8 +264,8 @@
         <div class="field">
           <label>Couleur de marque <span class="opt">(optionnel)</span></label>
           <div class="color-wrap">
-            <input type="color"  id="c-color-picker" value="#007AFF" oninput="syncColor('picker')" />
-            <input type="text"   id="c-color-text"   value="#007AFF" placeholder="#007AFF" maxlength="7" oninput="syncColor('text')" />
+            <input type="color"  id="c-color-picker" value="#007AFF" />
+            <input type="text"   id="c-color-text"   value="#007AFF" placeholder="#007AFF" maxlength="7" />
           </div>
         </div>
 
@@ -280,7 +280,7 @@
         </div>
       </div>
 
-      <button class="primary" id="submit-btn" onclick="handleSubmit()">
+      <button class="primary" id="submit-btn" type="button">
         <span id="btn-label">Créer le compte</span>
         <div id="btn-spinner" class="spinner" style="display:none"></div>
       </button>
@@ -352,6 +352,11 @@
         if (isValidHex(text.value.trim())) picker.value = text.value.trim();
       }
     }
+
+    const cColorPicker = document.getElementById('c-color-picker');
+    const cColorText = document.getElementById('c-color-text');
+    if (cColorPicker) cColorPicker.addEventListener('input', () => syncColor('picker'));
+    if (cColorText) cColorText.addEventListener('input', () => syncColor('text'));
 
     // ── Init ─────────────────────────────────────────────────────────────
 
@@ -481,6 +486,7 @@
       show('success-state');
     }
 
+    document.getElementById('submit-btn').addEventListener('click', handleSubmit);
     init();
     }
   </script>
