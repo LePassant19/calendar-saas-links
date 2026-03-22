@@ -300,7 +300,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/app-config.js"></script>
-  <script src="config.js"></script>
   <script>
     const cfg = window.__SUPABASE_CONFIG__;
     const appName = cfg?.appName || (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
@@ -310,7 +309,7 @@
     var successAppName = document.getElementById('success-app-name');
     if (successAppName) successAppName.textContent = appName;
     if (!cfg?.url || !cfg?.anonKey) {
-      document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
+      document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que /app-config.js est déployé et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
     } else {
     const client      = supabase.createClient(cfg.url, cfg.anonKey);
     const params      = new URLSearchParams(window.location.search);

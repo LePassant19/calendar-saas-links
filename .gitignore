@@ -1,4 +1,3 @@
 # Generated at build/deploy time — never commit real credentials.
 # Run: npm run build:universal-links-config (from parent repo) to regenerate.
 reset-password/config.js
-signup/config.js

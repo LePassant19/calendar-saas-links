@@ -1,7 +1,6 @@
 /**
- * Supabase config for signup page.
- * Preferred: npm run build:signup-config (reads EXPO_PUBLIC_* or SUPABASE_* from .env / CI).
- * Fallback: copy to config.js and set values manually. config.js is gitignored — never commit real keys.
+ * Legacy reference: signup loads /app-config.js (see universal-links-site/app-config.example.js).
+ * Regenerate with: npm run build:signup-config
  */
 window.__SUPABASE_CONFIG__ = {
   url: "https://your-project.supabase.co",

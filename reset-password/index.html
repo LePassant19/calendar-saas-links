@@ -183,17 +183,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/app-config.js"></script>
   <script>
-    window.__SUPABASE_CONFIG__ = {
-      url: "https://yootmbdddmtiqjybguqi.supabase.co",
-      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3RtYmRkZG10aXFqeWJndXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTk3NjksImV4cCI6MjA4MDA5NTc2OX0.JlEA7K1HqnURH0NQtqS6X3M5mR5UVAcuuDr--NmGv7Y",
-      appName: (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || "YM Mobility",
-    };
-  </script>
-  <script>
     if (window.__RESET_PASSWORD_ERROR_SHOWN) { /* already shown by early script */ } else {
     const cfg = window.__SUPABASE_CONFIG__;
     if (!cfg?.url || !cfg?.anonKey) {
-      document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que config.js existe et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
+      document.body.innerHTML = '<div class="card"><p class="msg error">Configuration manquante. Vérifiez que /app-config.js est déployé et définit __SUPABASE_CONFIG__ (url, anonKey).</p></div>';
     } else {
       const appName = cfg.appName || (window.__APP_CONFIG__ && window.__APP_CONFIG__.appName) || 'App';
       document.title = 'Réinitialisation du mot de passe – ' + appName;

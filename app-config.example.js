@@ -1,8 +1,12 @@
 /**
- * App config for universal-links-site.
- * Preferred: npm run build:universal-links-config (reads EXPO_PUBLIC_APP_NAME from .env).
- * app-config.js is committed with default; build overwrites for other deployments.
+ * App config for universal-links-site (copy to app-config.js or run npm run build:signup-config).
  */
 window.__APP_CONFIG__ = {
+  appName: "Your App Name",
+};
+
+window.__SUPABASE_CONFIG__ = {
+  url: "https://your-project.supabase.co",
+  anonKey: "your-anon-key",
   appName: "Your App Name",
 };
