@@ -292,8 +292,7 @@
       <div class="success-icon">✅</div>
       <h2 style="text-align:center" id="success-title">Compte créé !</h2>
       <p class="subtitle" id="success-body">
-        Vérifiez votre boîte mail pour confirmer votre adresse email.<br/><br/>
-        Vous pourrez ensuite vous connecter dans l'application <span id="success-app-name"></span>.
+        Vous pouvez vous connecter dans l'application <span id="success-app-name"></span>.
       </p>
     </div>
   </div>
@@ -481,8 +480,7 @@
 
       document.getElementById('success-title').textContent = name + ' est prêt !';
       document.getElementById('success-body').innerHTML =
-        'Vérifiez la boîte mail <strong>' + email + '</strong> pour confirmer l\'adresse.<br/><br/>' +
-        'Vous pourrez ensuite vous connecter dans l\'application ' + appName + '.';
+        'Vous pouvez vous connecter dans l\'application ' + appName + ' avec les identifiants que vous venez de créer.';
       show('success-state');
     }
 
